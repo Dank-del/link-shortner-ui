@@ -1,5 +1,5 @@
 const Configuration = {
-    "server": "https://shrt.sayan.org.in/"
+    "server": "http://127.0.0.1:8080"
 }
 
 

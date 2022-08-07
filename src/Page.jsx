@@ -8,32 +8,38 @@ class Page extends Component {
     state = {
         link: "",
         alert_res: <div></div>,
-        server_url: GetServer(),
         shortened_link: ""
     };
 
     handle_submit = (e) => {
+        // if (this.state.link.length === 0) {
+        //    this.setState( this.alert_res = <div className="alert alert-danger" role="alert">Please enter a link.</div> )
+        //    return;
+        // }
         e.preventDefault();
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', `${this.server_url}/new?url=${this.link}`);
-        xhr.responseType = 'json';
-        xhr.onload = function (e) {
-            if (this.status === 200) {
-                console.log('response', this.response)
-                this.shortened_link = this.response.LinkId ; // JSON response  
-            }
-        };
-        xhr.send();
-        //fetch(`${this.server_url}/new?url=${this.link}`).then(res => res.json()).then(data => {
-        //   console.log(data);
-        //})
+        // console.log(GetServer());
+        const reqUrl = `${GetServer()}/new?url=${this.link}`;
+        // const xhr = new XMLHttpRequest();
+        // xhr.open('GET', `${this.server_url}/new?url=${this.link}`);
+        // xhr.responseType = 'json';
+        // xhr.onload = function (e) {
+        //     if (this.status === 200) {
+        //         console.log('response', this.response)
+        //         this.shortened_link = this.response; // JSON response  
+        //     }
+        // };
+        // xhr.send();
+        // var shortened_link;
         this.setState(
-            this.alert_res = (
-                <div className="alert alert-dark" role="alert">
-                    The link shortened <a href={this.link} className="alert-link">here</a>. Give it a click if you like.
-                </div>
-            )
+            // eslint-disable-next-line react/no-direct-mutation-state
+            fetch(reqUrl).then(res => res.json().then(data => this.state.shortened_link = `${GetServer()}/link?id=${data.LinkId}`)).catch(err => console.log(err)));
+        console.log(this.state.shortened_link);
+        this.setState(this.alert_res = (
+            <div className="alert alert-success" role="alert">
+                The link shortened <a href={this.state.shortened_link} className="alert-link">here</a>. Give it a click if you like.
+            </div>
         )
+        );
         // console.log(this.link);
     }
 
